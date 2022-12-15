@@ -4,17 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:46754",
-      "sslPort": 44368
+      "applicationUrl": "http://localhost:64200",
+      "sslPort": 44325
     }
   },
   "profiles": {
-    "AmazingChat.SignalR": {
+    "AmazingChat.StockBot": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7171;http://localhost:5259",
+      "applicationUrl": "https://localhost:7265;http://localhost:5291",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
