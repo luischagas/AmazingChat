@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.StockBot", "Ama
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.SignalR", "AmazingChat.SignalR\AmazingChat.SignalR.csproj", "{2002ABA7-BD3D-4297-A516-71744E03AF2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.MessageBot", "AmazingChat.MessageBot\AmazingChat.MessageBot.csproj", "{546DCBDD-CB23-4E3C-A02D-38B670987E6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Consumer", "AmazingChat.Consumer\AmazingChat.Consumer.csproj", "{546DCBDD-CB23-4E3C-A02D-38B670987E6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
