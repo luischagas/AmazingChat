@@ -7,10 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Class1.cs" />
+      <Folder Include="RabbitMQ" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AmazingChat.Application\AmazingChat.Application.csproj" />
       <ProjectReference Include="..\AmazingChat.Infra.Data\AmazingChat.Infra.Data.csproj" />
     </ItemGroup>
 
