@@ -27,4 +27,34 @@
       <ProjectReference Include="..\AmazingChat.Infra.CrossCutting.Services\AmazingChat.Infra.CrossCutting.Services.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="wwwroot\lib\jquery\dist\jquery.min.js" />
+      <Content Remove="wwwroot\lib\jquery\LICENSE.txt" />
+      <Content Remove="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+      <Content Remove="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+      <Content Remove="wwwroot\lib\jquery-validation\LICENSE.md" />
+      <Content Remove="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js.map" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.esm.js" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css.map" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.css" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\css" />
+      <Folder Include="wwwroot\js" />
+      <Folder Include="wwwroot\lib\jquery-validation\dist" />
+    </ItemGroup>
+
 </Project>
