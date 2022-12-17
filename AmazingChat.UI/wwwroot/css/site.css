@@ -156,7 +156,7 @@
   flex-direction: row-reverse;
 }
 .ismine .message-content {
-  background: #8abde6;
+  background: #000000;
   color: white;
 }
 .ismine .message-content .content {
