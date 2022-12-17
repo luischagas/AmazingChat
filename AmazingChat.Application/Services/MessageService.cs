@@ -112,6 +112,12 @@ public class MessageService : AppService, IMessageService
                 {
                     return await Task.FromResult(new AppServiceResponse<MessageViewModel>(new MessageViewModel { Id = message.Id, Message = message.Message, Timestamp = message.Timestamp, Room = room.Name, User = userData.Email }, "Command Sent Successfully", true));
                 }
+
+                messageModel.Message = "Error to process Command";
+
+                await _hubContext.SendInfoMessage(messageModel);
+                    
+                return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error to process Command", false));
             }
             
             messageModel.Message = "Command Invalid";
