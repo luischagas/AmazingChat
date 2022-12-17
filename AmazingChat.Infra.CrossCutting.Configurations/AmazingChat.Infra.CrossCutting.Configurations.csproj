@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AmazingChat.Application\AmazingChat.Application.csproj" />
       <ProjectReference Include="..\AmazingChat.Infra.Data\AmazingChat.Infra.Data.csproj" />
     </ItemGroup>
 

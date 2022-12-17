@@ -7,17 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Class1.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="CsvHelper" Version="30.0.1" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="RestSharp" Version="108.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AmazingChat.Domain\AmazingChat.Domain.csproj" />
-      <ProjectReference Include="..\AmazingChat.Infra.CrossCutting.Services\AmazingChat.Infra.CrossCutting.Services.csproj" />
+      <Reference Include="RabbitMQ.Client">
+        <HintPath>..\..\..\.nuget\packages\rabbitmq.client\6.4.0\lib\netstandard2.0\RabbitMQ.Client.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

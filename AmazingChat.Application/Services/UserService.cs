@@ -2,10 +2,10 @@ using AmazingChat.Application.Common;
 using AmazingChat.Application.Interfaces;
 using AmazingChat.Application.Models;
 using AmazingChat.Domain.Entities;
-using AmazingChat.Domain.Interfaces.Notifier;
 using AmazingChat.Domain.Interfaces.Repositories;
-using AmazingChat.Domain.Notification;
 using AmazingChat.Domain.Shared;
+using AmazingChat.Domain.Shared.Notifications;
+using AmazingChat.Domain.Shared.UnitOfWork;
 
 namespace AmazingChat.Application.Services;
 

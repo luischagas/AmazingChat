@@ -1,4 +1,5 @@
 using AmazingChat.Domain.Shared;
+using AmazingChat.Domain.Shared.UnitOfWork;
 using AmazingChat.Infra.Data.Context;
 
 namespace AmazingChat.Infra.Data.UnitOfWork;

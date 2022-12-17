@@ -1,6 +1,6 @@
-using AmazingChat.Domain.Interfaces.Notifier;
-using AmazingChat.Domain.Notification;
 using AmazingChat.Domain.Shared;
+using AmazingChat.Domain.Shared.Notifications;
+using AmazingChat.Domain.Shared.UnitOfWork;
 using FluentValidation.Results;
 
 namespace AmazingChat.Application;

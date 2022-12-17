@@ -1,5 +1,5 @@
 using AmazingChat.Domain.Interfaces.Repositories;
-using AmazingChat.Domain.Shared;
+using AmazingChat.Domain.Shared.UnitOfWork;
 using AmazingChat.Infra.CrossCutting.Services.SignalR.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -31,18 +31,29 @@ public class ChatHub : Hub
         _unitOfWork = _serviceProvider.GetRequiredService<IUnitOfWork>();
     }
 
-    public async Task SendMessage(string receiverConnectionId, MessageModel messageModel)
+    public async Task SendMessage(MessageModel messageModel)
     {
         try
         {
             if (messageModel is not null)
-            {
                 await _context.Clients.Group(messageModel.Room).SendAsync("newMessage", messageModel);
-            }
         }
         catch (Exception ex)
         {
-            await Clients.Caller.SendAsync("onError", "You failed to create the message" + ex.Message);
+            await _context.Clients.All.SendAsync("onError", "You failed to create a message" + ex.Message);
+        }
+    }
+
+    public async Task SendInfoMessage(MessageModel messageModel)
+    {
+        try
+        {
+            if (messageModel is not null)
+                await _context.Clients.Group(messageModel.Room).SendAsync("onInfoMessage", messageModel.Message);
+        }
+        catch (Exception ex)
+        {
+            await _context.Clients.All.SendAsync("onError", "You failed to send a info message!" + ex.Message);
         }
     }
 
@@ -141,7 +152,7 @@ public class ChatHub : Hub
         }
         catch (Exception ex)
         {
-            await Clients.Caller.SendAsync("onError", "You failed to create the chat room!" + ex.Message);
+            await _context.Clients.All.SendAsync("onError", "You failed to create the chat room!" + ex.Message);
         }
     }
 
@@ -154,7 +165,7 @@ public class ChatHub : Hub
         }
         catch (Exception ex)
         {
-            await Clients.Caller.SendAsync("onError", "You failed to remove the chat room!" + ex.Message);
+            await _context.Clients.All.SendAsync("onError", "You failed to remove the chat room!" + ex.Message);
         }
     }
 }

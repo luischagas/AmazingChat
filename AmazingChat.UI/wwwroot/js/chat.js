@@ -49,6 +49,11 @@
         $("#errorAlert").removeClass("d-none").show().delay(5000).fadeOut(500);
     });
 
+    connection.on("onInfoMessage", function (message) {
+        viewModel.serverInfoMessage(message);
+        $("#errorAlert").removeClass("d-none").show().delay(5000).fadeOut(500);
+    });
+
     connection.on("onRoomDeleted", function (message) {
         viewModel.serverInfoMessage(message);
         $("#errorAlert").removeClass("d-none").show().delay(5000).fadeOut(500);
@@ -57,7 +62,6 @@
             viewModel.joinedRoom("");
         }
         else {
-            // Join to the first room in list
             setTimeout(function () {
                 $("#rooms-list li a")[0].click();
             }, 50);
@@ -96,15 +100,7 @@
         });
 
         self.sendNewMessage = function () {
-            var text = self.message();
-            if (text.startsWith("/")) {
-                var receiver = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
-                var message = text.substring(text.indexOf(")") + 1, text.length);
-                self.sendPrivate(receiver, message);
-            }
-            else {
-                self.sendToRoom(self.joinedRoom(), self.message());
-            }
+            self.sendToRoom(self.joinedRoom(), self.message());
 
             self.message("");
         }
@@ -116,12 +112,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ room: roomName, message: message })
                 });
-            }
-        }
-
-        self.sendPrivate = function (receiver, message) {
-            if (receiver.length > 0 && message.length > 0) {
-                connection.invoke("SendPrivate", receiver.trim(), message.trim());
             }
         }
 
@@ -226,45 +216,6 @@
                     temp = room;
             });
             self.chatRooms.remove(temp);
-        }
-
-        self.messageDeleted = function (id) {
-            var temp;
-            ko.utils.arrayForEach(self.chatMessages(), function (message) {
-                if (message.id() == id)
-                    temp = message;
-            });
-            self.chatMessages.remove(temp);
-        }
-
-        self.userAdded = function (user) {
-            self.chatUsers.push(user);
-        }
-
-        self.userRemoved = function (id) {
-            var temp;
-            ko.utils.arrayForEach(self.chatUsers(), function (user) {
-                if (user.userName() == id)
-                    temp = user;
-            });
-            self.chatUsers.remove(temp);
-        }
-
-        self.uploadFiles = function () {
-            var form = document.getElementById("uploadForm");
-            $.ajax({
-                type: "POST",
-                url: '/api/Upload',
-                data: new FormData(form),
-                contentType: false,
-                processData: false,
-                success: function () {
-                    $("#UploadedFile").val("");
-                },
-                error: function (error) {
-                    alert('Error: ' + error.responseText);
-                }
-            });
         }
     }
 

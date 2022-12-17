@@ -1,4 +1,4 @@
-namespace AmazingChat.Domain.Shared;
+namespace AmazingChat.Domain.Shared.UnitOfWork;
 
 public interface IUnitOfWork : IDisposable
 {

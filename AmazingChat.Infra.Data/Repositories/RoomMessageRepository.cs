@@ -31,7 +31,7 @@ public class RoomMessageRepository: BaseRepository<RoomMessage>, IRoomMessageRep
             .Include(r => r.User)
             .Where(a => a.RoomId == roomId)
             .OrderByDescending(m => m.Timestamp)
-            .Take(20)
+            .Take(50)
             .Reverse()
             .ToListAsync();
 

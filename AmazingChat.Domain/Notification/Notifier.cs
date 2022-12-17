@@ -1,4 +1,4 @@
-using AmazingChat.Domain.Interfaces.Notifier;
+using AmazingChat.Domain.Shared.Notifications;
 
 namespace AmazingChat.Domain.Notification;
 
@@ -6,7 +6,7 @@ public class Notifier : INotifier
 {
     #region Fields
 
-    private List<Notification> _notifications;
+    private List<Shared.Notifications.Notification> _notifications;
 
     #endregion Fields
 
@@ -14,19 +14,19 @@ public class Notifier : INotifier
 
     public Notifier()
     {
-        _notifications = new List<Notification>();
+        _notifications = new List<Shared.Notifications.Notification>();
     }
 
     #endregion Constructors
 
     #region Methods
 
-    public List<Notification> GetAllNotifications()
+    public List<Shared.Notifications.Notification> GetAllNotifications()
     {
         return _notifications;
     }
 
-    public void Handle(Notification notificacao)
+    public void Handle(Shared.Notifications.Notification notificacao)
     {
         _notifications.Add(notificacao);
     }

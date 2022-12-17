@@ -3,13 +3,16 @@ using AmazingChat.Application.Common;
 using AmazingChat.Application.Interfaces;
 using AmazingChat.Application.Models;
 using AmazingChat.Domain.Entities;
-using AmazingChat.Domain.Interfaces.Notifier;
 using AmazingChat.Domain.Interfaces.Repositories;
-using AmazingChat.Domain.Notification;
-using AmazingChat.Domain.Shared;
+using AmazingChat.Domain.Shared.Models;
+using AmazingChat.Domain.Shared.Notifications;
+using AmazingChat.Domain.Shared.Services;
+using AmazingChat.Domain.Shared.UnitOfWork;
 using AmazingChat.Infra.CrossCutting.Services.SignalR;
 using AmazingChat.Infra.CrossCutting.Services.SignalR.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using RestSharp;
 
 namespace AmazingChat.Application.Services;
 
@@ -21,6 +24,8 @@ public class MessageService : AppService, IMessageService
     private readonly IRoomMessageRepository _roomMessageRepository;
     private readonly IUserRepository _userRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly SignalRConfigurations _signalRConfigurations;
+    private readonly ICommunicationRestService _communicationRestService;
 
 
     private readonly ChatHub _hubContext;
@@ -35,7 +40,9 @@ public class MessageService : AppService, IMessageService
         ChatHub hubContext,
         IRoomMessageRepository roomMessageRepository,
         IUserRepository userRepository,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        IOptions<SignalRConfigurations> signalRConfigurations,
+        ICommunicationRestService communicationRestService)
         : base(unitOfWork, notifier)
     {
         _roomRepository = roomRepository;
@@ -43,6 +50,8 @@ public class MessageService : AppService, IMessageService
         _roomMessageRepository = roomMessageRepository;
         _userRepository = userRepository;
         _httpContextAccessor = httpContextAccessor;
+        _communicationRestService = communicationRestService;
+        _signalRConfigurations = signalRConfigurations.Value;
     }
 
     #endregion Constructors
@@ -73,11 +82,50 @@ public class MessageService : AppService, IMessageService
 
         var message = new RoomMessage(Regex.Replace(request.Message, @"<.*?>", string.Empty), room.Id, userData.Id);
 
+        if (message.Message.Contains('/'))
+        {
+            MessageModel messageModel = new MessageModel { Id = message.Id, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email };;
+            var commandAllowed = false;
+
+            foreach (var allowedCommand in _signalRConfigurations.AllowedCommands)
+            {
+                var regex = new Regex($"(?<={allowedCommand}).*").Matches(message.Message);
+
+                if (regex.Any())
+                    commandAllowed = true;
+            }
+
+            if (commandAllowed)
+            {
+                messageModel.Message = "Wait! Command being processed";
+                
+                await _hubContext.SendInfoMessage(messageModel);
+
+                var splitCommand = message.Message.Split("=");
+
+                var result = _communicationRestService.SendRequest(_signalRConfigurations.UrlStockBot, "Command", Method.Post, new CommandViewModel
+                {
+                    Command = splitCommand[1]
+                });
+                
+                if (result.IsSuccessful)
+                {
+                    return await Task.FromResult(new AppServiceResponse<MessageViewModel>(new MessageViewModel { Id = message.Id, Message = message.Message, Timestamp = message.Timestamp, Room = room.Name, User = userData.Email }, "Command Sent Successfully", true));
+                }
+            }
+            
+            messageModel.Message = "Command Invalid";
+
+            await _hubContext.SendInfoMessage(messageModel);
+
+            return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error Sending Command", false));
+        }
+
         if (message.IsValid())
         {
             await _roomMessageRepository.AddAsync(message);
 
-            await _hubContext.SendMessage(userData.ConnectionId, new MessageModel { Id = message.Id, Message = message.Message, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email });
+            await _hubContext.SendMessage(new MessageModel { Id = message.Id, Message = message.Message, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email });
         }
         else
         {

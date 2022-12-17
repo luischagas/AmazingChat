@@ -1,4 +1,4 @@
-namespace AmazingChat.Domain.Notification;
+namespace AmazingChat.Domain.Shared.Notifications;
 
 public class Notification
 {
