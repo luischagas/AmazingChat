@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AmazingChat.Infra.Data.Migrations
 {
     [DbContext(typeof(AmazingChatContext))]
-    [Migration("20221216052835_Initial")]
+    [Migration("20221217045414_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,12 +30,6 @@ namespace AmazingChat.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CascadeMode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClassLevelCascadeMode")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -46,17 +40,9 @@ namespace AmazingChat.Infra.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RuleLevelCascadeMode")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Rooms", (string)null);
                 });
@@ -66,12 +52,6 @@ namespace AmazingChat.Infra.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CascadeMode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClassLevelCascadeMode")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -86,13 +66,10 @@ namespace AmazingChat.Infra.Data.Migrations
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RuleLevelCascadeMode")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -112,45 +89,24 @@ namespace AmazingChat.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CascadeMode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClassLevelCascadeMode")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConnectionId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RuleLevelCascadeMode")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("AmazingChat.Domain.Entities.Room", b =>
-                {
-                    b.HasOne("AmazingChat.Domain.Entities.User", "User")
-                        .WithMany("Rooms")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AmazingChat.Domain.Entities.RoomMessage", b =>
@@ -161,11 +117,15 @@ namespace AmazingChat.Infra.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AmazingChat.Domain.Entities.User", null)
+                    b.HasOne("AmazingChat.Domain.Entities.User", "User")
                         .WithMany("Messages")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Room");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AmazingChat.Domain.Entities.Room", b =>
@@ -176,8 +136,6 @@ namespace AmazingChat.Infra.Data.Migrations
             modelBuilder.Entity("AmazingChat.Domain.Entities.User", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("Rooms");
                 });
 #pragma warning restore 612, 618
         }

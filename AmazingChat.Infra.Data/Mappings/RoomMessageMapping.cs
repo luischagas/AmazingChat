@@ -33,9 +33,23 @@ public class RoomMessageMapping : IEntityTypeConfiguration<RoomMessage>
             .HasForeignKey(s => s.RoomId)
             .IsRequired();
         
+        builder
+            .HasOne(s => s.User)
+            .WithMany(d => d.Messages)
+            .HasForeignKey(s => s.UserId)
+            .IsRequired();
+        
+        builder
+            .Ignore(d => d.RuleLevelCascadeMode);
+        
+        builder
+            .Ignore(d => d.ClassLevelCascadeMode);
+        
+        builder
+            .Ignore(d => d.CascadeMode);
 
         builder
-            .Ignore(s => s.ValidationResult);
+            .Ignore(d => d.ValidationResult);
     }
 
     #endregion Methods

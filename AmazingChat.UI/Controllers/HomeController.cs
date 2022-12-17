@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using AmazingChat.UI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AmazingChat.UI.Controllers;
 
@@ -19,6 +19,11 @@ public class HomeController : Controller
     }
 
     public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    public IActionResult Chat()
     {
         return View();
     }

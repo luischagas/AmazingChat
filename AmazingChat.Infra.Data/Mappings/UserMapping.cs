@@ -17,23 +17,26 @@ public class UserMapping : IEntityTypeConfiguration<User>
             .HasKey(i => i.Id).IsClustered(false);
 
         builder
-            .Property(hi => hi.Name)
+            .Property(hi => hi.Email)
             .IsRequired();
 
         builder
-            .Property(hi => hi.ConnectionId)
-            .IsRequired();
+            .Property(hi => hi.ConnectionId);
 
         builder
             .HasQueryFilter(u => u.IsDeleted == false);
-        
-        builder
-            .HasMany(i => i.Rooms)
-            .WithOne(hi => hi.User)
-            .HasForeignKey(b => b.UserId);
 
         builder
-            .Ignore(s => s.ValidationResult);
+            .Ignore(d => d.RuleLevelCascadeMode);
+        
+        builder
+            .Ignore(d => d.ClassLevelCascadeMode);
+        
+        builder
+            .Ignore(d => d.CascadeMode);
+
+        builder
+            .Ignore(d => d.ValidationResult);
 
     }
 

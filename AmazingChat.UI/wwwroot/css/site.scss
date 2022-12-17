@@ -1,0 +1,30 @@
+﻿@import "_sidebar.scss";
+@import "_content.scss";
+@import "_userslist.scss";
+@import "_auth.scss";
+@import "_misc.scss";
+
+body {
+    background: white;
+}
+
+.app {
+    display: flex;
+    height: 50vh;
+    justify-content: space-between;
+    background: white;
+
+    .sidebar {
+        width: 270px;
+        min-width: 270px;
+    }
+
+    .main-content {
+        flex-grow: 1;
+    }
+
+    .users-container {
+        width: 250px;
+        min-width: 250px;
+    }
+}

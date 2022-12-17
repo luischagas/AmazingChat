@@ -1,3 +1,5 @@
+using FluentValidation;
+
 namespace AmazingChat.Domain.Entities;
 
 public class Room : Entity<Room>
@@ -15,16 +17,7 @@ public class Room : Entity<Room>
 
     public string Name { get; private set; }
 
-    public Guid UserId { get; private set; }
-    
-    public User User { get; private set; }
-
-    public ICollection<RoomMessage> Messages => _messages;
-
-    public void UpdateName(string name)
-    {
-        Name = name;
-    }
+    public IEnumerable<RoomMessage> Messages => _messages;
     
     public void AddRoomMessage(RoomMessage roomMessage)
     {
@@ -36,6 +29,17 @@ public class Room : Entity<Room>
     
     public override bool IsValid()
     {
-        throw new NotImplementedException();
+        ValidateName();
+        
+        AddErrors(Validate(this));
+
+        return ValidationResult.IsValid;
+    }
+    
+    private void ValidateName()
+    {
+        RuleFor(d => d.Name)
+            .NotEmpty()
+            .WithMessage("Name is required");
     }
 }

@@ -30,6 +30,13 @@ public class UserRepository : BaseRepository<User>, IUserRepository
                 .FirstOrDefaultAsync(a => a.ConnectionId == connectionId);
 
         }
+        
+        public async Task<User> GetByEmail(string email)
+        {
+            return await _users
+                .FirstOrDefaultAsync(a => a.Email == email);
+
+        }
 
         #endregion Public Methods
     }

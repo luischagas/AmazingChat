@@ -1,8 +1,8 @@
 namespace AmazingChat.Application.Models;
 
-public class UserModel
+public class UserViewModel
 {
-    public string Name { get; set; }
+    public Guid Id { get; set; }
+    public string Email { get; set; }
     public string ConnectionId { get; set; }
-    public string CurrentRoom { get; set; }
 }

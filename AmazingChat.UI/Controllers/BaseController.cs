@@ -6,6 +6,5 @@ public class BaseController : Controller
 {
     #region Fields
 
-
     #endregion Methods
 }

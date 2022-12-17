@@ -19,12 +19,21 @@ public class RoomMapping : IEntityTypeConfiguration<Room>
         builder
             .Property(hi => hi.Name)
             .IsRequired();
-
-        builder
-            .Ignore(s => s.ValidationResult);
         
         builder
             .HasQueryFilter(u => u.IsDeleted == false);
+        
+        builder
+            .Ignore(d => d.RuleLevelCascadeMode);
+        
+        builder
+            .Ignore(d => d.ClassLevelCascadeMode);
+        
+        builder
+            .Ignore(d => d.CascadeMode);
+
+        builder
+            .Ignore(d => d.ValidationResult);
     }
 
     #endregion Methods

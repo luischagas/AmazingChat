@@ -21,7 +21,7 @@ public static class IdentityConfig
         });
 
         services.AddDbContext<AmazingChatIdentityContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("IdentityConnection")));
 
         services.AddDefaultIdentity<IdentityUser>(options =>
             {

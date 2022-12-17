@@ -27,9 +27,6 @@ namespace AmazingChat.Infra.Data.Repositories;
         public async Task<TEntity> AddAsync(TEntity obj)
         {
             var result = await _db.Set<TEntity>().AddAsync(obj);
-
-           await _db.SaveChangesAsync();
-
             return result.Entity;
         }
 
