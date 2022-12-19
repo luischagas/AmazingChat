@@ -8,4 +8,8 @@ sleep 5
 
 URL='http://localhost:8080'
 
-start $URL
+if start; then
+    start $URL
+else
+    open $URL
+fi
