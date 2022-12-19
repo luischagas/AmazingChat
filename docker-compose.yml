@@ -1,61 +1,76 @@
-version: '3.4'
+version: "3.5"
 
 services:
+  nginx:
+    depends_on:
+      - stock
+      - amazingchat
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "80:80"
+
   db:
     image: mcr.microsoft.com/azure-sql-edge
-    container_name: amazing-db
-    hostname: amazingdb
     environment:
       ACCEPT_EULA: 'Y'
       SA_PASSWORD: MyPass@word
+    volumes:
+      - ./dbdata:/var/opt/mssql/data
     ports:
       - "1433:1433"
     restart: always
-    networks:
-         - amazing-dev
 
   rabbitmq:
-    image: rabbitmq:3.9-management-alpine
-    container_name: rabbit-mq
-    environment:
-          RABBITMQ_DEFAULT_USER: "rabbitmq"
-          RABBITMQ_DEFAULT_PASS: "PASSWORD"
-    ports:
-       - "5672:5672"
-       - "15672:15672"
-    healthcheck:
-      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
-      interval: 5s
-      timeout: 15s
-      retries: 1
-    volumes:
-         - ./cert_rabbitmq:/cert_rabbitmq
-    networks:
-         - amazing-dev   
+        image: rabbitmq:3-management-alpine
+        environment:
+            RABBITMQ_DEFAULT_USER: "rabbitmq"
+            RABBITMQ_DEFAULT_PASS: "PASSWORD"
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        healthcheck:
+            test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+        volumes:
+            - ./cert_rabbitmq:/cert_rabbitmq
+        networks:
+            - amazing-dev
 
-  amazingchat.ui:
-    image: ${DOCKER_REGISTRY-}amazingchatui
-    container_name: amazing-ui
-    depends_on:
-      - stock-bot
-    environment:
-      - ConnectionStrings__DefaultConnection=Server=localhost;User=sa;Password=MyPass@word;Database=AmazingChatDb;Trusted_Connection=False;MultipleActiveResultSets=true;
-      - UrlStockBot=http://localhost/
-    build:
-      context: .
-      dockerfile: AmazingChat.UI/Dockerfile
-    restart: always
-    networks:
-         - amazing-dev
-
-  stock-bot:
+  stock:
     depends_on:
       - rabbitmq
+    environment:
+      - RabbitMQSettings__ConnectionString=amqp://rabbitmq:PASSWORD@rabbitmq:5672
+      - ConnectionStrings__DefaultConnection=Data Source=db,1433;Initial Catalog=AmazingChatDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
     build:
-      dockerfile: AmazingChat.StockBot/Dockerfile
+      dockerfile: ./AmazingChat.StockBot/Dockerfile
     restart: always
     networks:
-         - amazing-dev
+            - amazing-dev
+
+  amazingchat:
+    depends_on:
+     rabbitmq:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Data Source=db,1433;Initial Catalog=AmazingChatDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
+      - ConnectionStrings__IdentityConnection=Data Source=db,1433;Initial Catalog=AmazingChatIdentityDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
+      - RabbitMQSettings__ConnectionString=amqp://rabbitmq:PASSWORD@rabbitmq:5672
+      - SignalR__UrlStockBot=http://stock/api/
+    build:
+      dockerfile: AmazingChat.UI/Dockerfile
+    restart: always   
+    networks:
+            - amazing-dev
+
+volumes:
+  dbdata:  
+  rabbit:
 
 networks:
     amazing-dev:

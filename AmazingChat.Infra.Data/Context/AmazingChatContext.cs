@@ -7,6 +7,7 @@ public class AmazingChatContext : DbContext
 {
     public AmazingChatContext(DbContextOptions options) : base(options)
     {
+        Database.Migrate();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

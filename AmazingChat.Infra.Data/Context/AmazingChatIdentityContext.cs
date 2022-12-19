@@ -10,6 +10,7 @@ public class AmazingChatIdentityContext : IdentityDbContext
     public AmazingChatIdentityContext(DbContextOptions<AmazingChatIdentityContext> options)
         : base(options)
     {
+        Database.Migrate();
     }
 
     #endregion Constructors

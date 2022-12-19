@@ -49,7 +49,7 @@ namespace AmazingChat.Infra.Data.Migrations
                 },
                 new object[]
                 {
-                    id.ToString(), "stockbot@gmail.com", "", DateTime.Now, 0
+                    id.ToString(), "stockbot@gmail.com", "", DateTime.Now, false
                 });
 
             migrationBuilder.CreateTable(

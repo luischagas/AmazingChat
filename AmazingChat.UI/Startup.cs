@@ -47,19 +47,12 @@ public class Startup
         services.AddScoped<IConsumerService, ConsumerService>();
 
         services.AddRabbitMqConsumerService(Configuration);
-
-        services.AddHostedService<Worker>();
-
+        
         services.ResolveDependencies();
 
         services.Configure<SignalRConfigurations>(Configuration.GetSection("SignalR"));
         
-        services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(@"C:\temp-keys\"))
-            .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
-            {
-                EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
-                ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
-            });
+        services.AddHostedService<Worker>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

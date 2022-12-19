@@ -1,13 +1,77 @@
-version: '3.4'
+version: "3.5"
 
 services:
-  amazingchat.ui:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+  nginx:
+    depends_on:
+      - stock
+      - amazingchat
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
     ports:
-      - "80"
-      - "443"
+      - "80:80"
+
+  db:
+    image: mcr.microsoft.com/azure-sql-edge
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: MyPass@word
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./dbdata:/var/opt/mssql/data
+    ports:
+      - "1433:1433"
+    restart: always
+
+  rabbitmq:
+        image: rabbitmq:3-management-alpine
+        environment:
+            RABBITMQ_DEFAULT_USER: "rabbitmq"
+            RABBITMQ_DEFAULT_PASS: "PASSWORD"
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        healthcheck:
+            test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+        volumes:
+            - ./cert_rabbitmq:/cert_rabbitmq
+        networks:
+            - amazing-dev
+
+  stock:
+    depends_on:
+      - rabbitmq
+    environment:
+      - RabbitMQSettings__ConnectionString=amqp://rabbitmq:PASSWORD@rabbitmq:5672
+      - ConnectionStrings__DefaultConnection=Data Source=db,1433;Initial Catalog=AmazingChatDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
+    build:
+      dockerfile: ./AmazingChat.StockBot/Dockerfile
+    restart: always
+    networks:
+            - amazing-dev
+
+  amazingchat:
+    depends_on:
+     rabbitmq:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Data Source=db,1433;Initial Catalog=AmazingChatDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
+      - ConnectionStrings__IdentityConnection=Data Source=db,1433;Initial Catalog=AmazingChatIdentityDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
+      - RabbitMQSettings__ConnectionString=amqp://rabbitmq:PASSWORD@rabbitmq:5672
+      - SignalR__UrlStockBot=http://stock/api/
+    build:
+      dockerfile: AmazingChat.UI/Dockerfile
+    restart: always   
+    networks:
+            - amazing-dev
+
+volumes:
+  dbdata:  
+  rabbit:
+
+networks:
+    amazing-dev:
+        driver: bridge

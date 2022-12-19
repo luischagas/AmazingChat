@@ -25,7 +25,7 @@ public class Worker : BackgroundService
 
         var consumer = _rabbitMqConsumerService.DefineBasicConsumer();
 
-        consumer.Received += async (model, ea) => await HandleMessageAsync(ea);
+        consumer.Received += (model, ea) => HandleMessageAsync(ea);
 
         _rabbitMqConsumerService.SetConsumer(consumer);
 

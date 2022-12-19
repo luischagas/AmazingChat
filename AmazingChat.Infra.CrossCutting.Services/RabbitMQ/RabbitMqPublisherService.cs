@@ -14,14 +14,8 @@ public class RabbitMqPublisherService : IRabbitMqPublisherService
     {
         _settings = settings;
 
-        var factory = new ConnectionFactory
-        {
-            HostName = settings.HostName,
-            Port = settings.Port,
-            UserName = settings.UserName,
-            Password = settings.Password
-        };
-
+        var factory = new ConnectionFactory() { Uri = new Uri(settings.ConnectionString) };
+        
         try
         {
             var connection = factory.CreateConnection();
