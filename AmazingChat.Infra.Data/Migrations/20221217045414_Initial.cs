@@ -39,6 +39,18 @@ namespace AmazingChat.Infra.Data.Migrations
                     table.PrimaryKey("PK_Users", x => x.Id)
                         .Annotation("SqlServer:Clustered", false);
                 });
+            
+            var id = Guid.NewGuid();
+
+            migrationBuilder.InsertData("Users",
+                new[]
+                {
+                    "Id", "Email", "ConnectionId", "CreatedOn", "IsDeleted"
+                },
+                new object[]
+                {
+                    id.ToString(), "stockbot@gmail.com", "", DateTime.Now, 0
+                });
 
             migrationBuilder.CreateTable(
                 name: "RoomMessages",

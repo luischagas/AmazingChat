@@ -14,24 +14,23 @@ public class User : Entity<User>
 
     protected User()
     {
-        
     }
-    
-    public string Email { get; private set; }
+
+    public string Email { get; }
 
     public string? ConnectionId { get; private set; }
 
     public IEnumerable<RoomMessage> Messages => _messages;
-    
+
     public override bool IsValid()
     {
         ValidateEmail();
-        
+
         AddErrors(Validate(this));
 
         return ValidationResult.IsValid;
     }
-    
+
     private void ValidateEmail()
     {
         RuleFor(d => d.Email)

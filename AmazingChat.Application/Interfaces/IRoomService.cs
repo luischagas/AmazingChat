@@ -8,5 +8,4 @@ public interface IRoomService
     Task<IAppServiceResponse> GetAll();
     Task<IAppServiceResponse> Get(Guid id);
     Task<IAppServiceResponse> Remove(Guid id);
-
 }

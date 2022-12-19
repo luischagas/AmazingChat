@@ -3,37 +3,33 @@ using RabbitMQ.Client;
 
 namespace AmazingChat.Infra.CrossCutting.Services.RabbitMQ;
 
- public static class RabbitMqInitializer
+public static class RabbitMqInitializer
+{
+    public static void Initiate(IModel channel, RabbitMqSettings settings)
     {
-        #region Methods
+        Dictionary<string, object>? defaultArguments = null;
 
-        public static void Initiate(IModel channel, RabbitMqSettings settings)
-        {
-            Dictionary<string, object> defaultArguments = null;
-            
-            channel.QueueDeclare(
-                queue: settings.Queue.Name,
-                durable: settings.Queue.IsDurable,
-                exclusive: settings.Queue.IsExclusive,
-                autoDelete: settings.Queue.IsAutoDeleted,
-                arguments: defaultArguments
-            );
+        channel.QueueDeclare(
+            settings.Queue.Name,
+            settings.Queue.IsDurable,
+            settings.Queue.IsExclusive,
+            settings.Queue.IsAutoDeleted,
+            defaultArguments
+        );
 
-            channel.ExchangeDeclare(
-                exchange: settings.Queue.Exchange.Name,
-                type: settings.Queue.Exchange.Type,
-                durable: settings.Queue.Exchange.IsDurable,
-                autoDelete: settings.Queue.Exchange.IsAutoDeleted,
-                arguments: settings.Queue.Exchange.Arguments
-            );
+        channel.ExchangeDeclare(
+            settings.Queue.Exchange.Name,
+            settings.Queue.Exchange.Type,
+            settings.Queue.Exchange.IsDurable,
+            settings.Queue.Exchange.IsAutoDeleted,
+            settings.Queue.Exchange.Arguments
+        );
 
-            channel.QueueBind(
-                queue: settings.Queue.Name,
-                exchange: settings.Queue.Exchange.Name,
-                routingKey: settings.Queue.RoutingKey,
-                arguments: null
-            );
-        }
-
-        #endregion Methods
+        channel.QueueBind(
+            settings.Queue.Name,
+            settings.Queue.Exchange.Name,
+            settings.Queue.RoutingKey,
+            null
+        );
     }
+}

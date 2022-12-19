@@ -2,34 +2,29 @@ using System.Globalization;
 using AmazingChat.Application.Common;
 using AmazingChat.Application.Interfaces;
 using AmazingChat.Application.Models;
-using AmazingChat.Domain.Interfaces.Services;
 using AmazingChat.Domain.Shared.Models;
 using AmazingChat.Domain.Shared.Notifications;
 using AmazingChat.Domain.Shared.Services;
 using AmazingChat.Domain.Shared.UnitOfWork;
 using CsvHelper;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using RestSharp;
 
 namespace AmazingChat.Application.Services;
 
 public class StockBotService : AppService, IStockBotService
 {
-    #region Fields
-
     private readonly SignalRConfigurations _signalRConfigurations;
     private readonly ICommunicationRestService _communicationRestService;
     private readonly IRabbitMqPublisherService _rabbitMqPublisherService;
-
-    #endregion
-
-    #region Constructors
 
     public StockBotService(IUnitOfWork unitOfWork,
         INotifier notifier,
         IOptions<SignalRConfigurations> signalRConfigurations,
         ICommunicationRestService communicationRestService,
-        IRabbitMqPublisherService rabbitMqPublisherService)
+        IRabbitMqPublisherService rabbitMqPublisherService,
+        IMessageService messageService)
         : base(unitOfWork, notifier)
     {
         _communicationRestService = communicationRestService;
@@ -37,9 +32,6 @@ public class StockBotService : AppService, IStockBotService
         _signalRConfigurations = signalRConfigurations.Value;
     }
 
-    #endregion Constructors
-
-    #region Public Methods
 
     public async Task<IAppServiceResponse> ProcessCommand(CommandViewModel request)
     {
@@ -53,14 +45,19 @@ public class StockBotService : AppService, IStockBotService
 
             if (string.IsNullOrEmpty(stockQuote) is false)
             {
-                var queued = _rabbitMqPublisherService.EnqueueMessage(stockQuote);
+                var commandViewModel = new MessageStockModel
+                {
+                    Room = request.Room,
+                    Message = stockQuote
+                };
+
+                var queued = _rabbitMqPublisherService.EnqueueMessage(JsonConvert.SerializeObject(commandViewModel));
 
                 if (queued)
                     return await Task.FromResult(new AppServiceResponse<string>(stockQuote, "Stock obtained Successfully", true));
             }
-            
+
             return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error to obtain Stock", false));
-           
         }
 
         return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error to obtain Stock", false));
@@ -89,6 +86,4 @@ public class StockBotService : AppService, IStockBotService
             return string.Empty;
         }
     }
-
-    #endregion Public Methods
 }

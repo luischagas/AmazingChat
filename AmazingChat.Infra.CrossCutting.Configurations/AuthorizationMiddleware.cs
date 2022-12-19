@@ -5,11 +5,12 @@ namespace AmazingChat.Infra.CrossCutting.Identity;
 public class AuthorizationMiddleware
 {
     private readonly RequestDelegate _next;
-    
+
     public AuthorizationMiddleware(RequestDelegate next)
     {
         _next = next;
     }
+
     public async Task InvokeAsync(HttpContext httpContext)
     {
         var isAuthorized = httpContext.User.Claims.Any(c => true);
@@ -18,7 +19,7 @@ public class AuthorizationMiddleware
         {
             httpContext.Response.Redirect("/Identity/Account/Login");
         }
-        
+
         await _next(httpContext);
     }
 }

@@ -23,10 +23,7 @@ public static class IdentityConfig
         services.AddDbContext<AmazingChatIdentityContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("IdentityConnection")));
 
-        services.AddDefaultIdentity<IdentityUser>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = false;
-            })
+        services.AddDefaultIdentity<IdentityUser>(options => { options.SignIn.RequireConfirmedAccount = false; })
             .AddEntityFrameworkStores<AmazingChatIdentityContext>();
     }
 

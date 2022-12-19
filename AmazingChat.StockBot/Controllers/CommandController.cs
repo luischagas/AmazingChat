@@ -25,7 +25,9 @@ public class CommandController : Controller
 
         return GenerateResponse(HttpStatusCode.OK, result);
     }
-    
+
     private IActionResult GenerateResponse(HttpStatusCode statusCode, object result)
-        => StatusCode((int)statusCode, result);
+    {
+        return StatusCode((int) statusCode, result);
+    }
 }

@@ -1,4 +1,3 @@
-using AmazingChat.Domain.Shared;
 using AmazingChat.Domain.Shared.UnitOfWork;
 using AmazingChat.Infra.Data.Context;
 
@@ -31,14 +30,15 @@ public class UnitOfWork : IUnitOfWork
 
     protected virtual void Dispose(bool disposing)
     {
-        if (!this._disposed)
+        if (!_disposed)
         {
             if (disposing)
             {
                 _context.Dispose();
             }
         }
-        this._disposed = true;
+
+        _disposed = true;
     }
 
     public void Dispose()

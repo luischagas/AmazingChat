@@ -3,7 +3,6 @@ using AmazingChat.Application.Interfaces;
 using AmazingChat.Application.Models;
 using AmazingChat.Domain.Entities;
 using AmazingChat.Domain.Interfaces.Repositories;
-using AmazingChat.Domain.Shared;
 using AmazingChat.Domain.Shared.Notifications;
 using AmazingChat.Domain.Shared.UnitOfWork;
 using AmazingChat.Infra.CrossCutting.Services.SignalR;
@@ -12,14 +11,8 @@ namespace AmazingChat.Application.Services;
 
 public class RoomService : AppService, IRoomService
 {
-    #region Fields
-
     private readonly IRoomRepository _roomRepository;
     private readonly ChatHub _hubContext;
-
-    #endregion
-
-    #region Constructors
 
     public RoomService(IUnitOfWork unitOfWork,
         INotifier notifier,
@@ -31,9 +24,6 @@ public class RoomService : AppService, IRoomService
         _hubContext = hubContext;
     }
 
-    #endregion Constructors
-
-    #region Public Methods
 
     public async Task<IAppServiceResponse> Create(RoomViewModel request)
     {
@@ -51,8 +41,6 @@ public class RoomService : AppService, IRoomService
         if (room.IsValid())
         {
             await _roomRepository.AddAsync(room);
-
-            await _hubContext.CreateRoom(room.Id, room.Name);
         }
         else
         {
@@ -62,7 +50,12 @@ public class RoomService : AppService, IRoomService
         }
 
         if (await CommitAsync())
+        {
+            await _hubContext.CreateRoom(room.Id, room.Name);
+
             return await Task.FromResult(new AppServiceResponse<RoomViewModel>(new RoomViewModel { Id = room.Id, Name = room.Name }, "Room Created Successfully", true));
+        }
+
 
         return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error Creating Order", false));
     }
@@ -137,6 +130,4 @@ public class RoomService : AppService, IRoomService
 
         return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error Creating Order", false));
     }
-
-    #endregion Public Methods
 }

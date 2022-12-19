@@ -19,31 +19,15 @@
         viewModel.myName(displayName);
         viewModel.isLoading(false);
     });
-
-    connection.on("addUser", function (user) {
-        viewModel.userAdded(new ChatUser(user.username, user.fullName, user.currentRoom, user.device));
-    });
-
-    connection.on("removeUser", function (user) {
-        viewModel.userRemoved(user.username);
-    });
-
+    
     connection.on("addChatRoom", function (room) {
         viewModel.roomAdded(new ChatRoom(room.id, room.name));
-    });
-
-    connection.on("updateChatRoom", function (room) {
-        viewModel.roomUpdated(new ChatRoom(room.id, room.name));
     });
 
     connection.on("removeChatRoom", function (id) {
         viewModel.roomDeleted(id);
     });
-
-    connection.on("removeChatMessage", function (id) {
-        viewModel.messageDeleted(id);
-    });
-
+    
     connection.on("onError", function (message) {
         viewModel.serverInfoMessage(message);
         $("#errorAlert").removeClass("d-none").show().delay(5000).fadeOut(500);
@@ -165,16 +149,6 @@
             });
         }
 
-        self.deleteMessage = function () {
-            var messageId = $("#itemToDelete").val();
-
-            fetch('/Message/' + messageId, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: messageId })
-            });
-        }
-
         self.messageHistory = function () {
             fetch('/Message/Room/' + viewModel.joinedRoom())
                 .then(response => response.json())
@@ -197,18 +171,7 @@
             self.chatRooms.push(room);
         }
 
-        self.roomUpdated = function (updatedRoom) {
-            var room = ko.utils.arrayFirst(self.chatRooms(), function (item) {
-                return updatedRoom.id() == item.id();
-            });
-
-            room.name(updatedRoom.name());
-
-            if (self.joinedRoomId() == room.id()) {
-                self.joinRoom(room);
-            }
-        }
-
+        
         self.roomDeleted = function (id) {
             var temp;
             ko.utils.arrayForEach(self.chatRooms(), function (room) {

@@ -3,6 +3,7 @@ using AmazingChat.Application.Common;
 using AmazingChat.Application.Interfaces;
 using AmazingChat.Application.Models;
 using AmazingChat.Domain.Entities;
+using AmazingChat.Domain.Enums;
 using AmazingChat.Domain.Interfaces.Repositories;
 using AmazingChat.Domain.Shared.Models;
 using AmazingChat.Domain.Shared.Notifications;
@@ -18,22 +19,14 @@ namespace AmazingChat.Application.Services;
 
 public class MessageService : AppService, IMessageService
 {
-    #region Fields
-
     private readonly IRoomRepository _roomRepository;
     private readonly IRoomMessageRepository _roomMessageRepository;
     private readonly IUserRepository _userRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly SignalRConfigurations _signalRConfigurations;
     private readonly ICommunicationRestService _communicationRestService;
-
-
     private readonly ChatHub _hubContext;
-
-    #endregion
-
-    #region Constructors
-
+    
     public MessageService(IUnitOfWork unitOfWork,
         INotifier notifier,
         IRoomRepository roomRepository,
@@ -54,15 +47,12 @@ public class MessageService : AppService, IMessageService
         _signalRConfigurations = signalRConfigurations.Value;
     }
 
-    #endregion Constructors
-
-    #region Public Methods
 
     public async Task<IAppServiceResponse> Create(MessageViewModel request)
     {
-        var user = _httpContextAccessor.HttpContext?.User;
+        var email = string.IsNullOrEmpty(request.User) is false ? request.User : _httpContextAccessor.HttpContext?.User?.Identity?.Name;
 
-        var userData = await _userRepository.GetByEmail(user?.Identity?.Name ?? "");
+        var userData = await _userRepository.GetByEmail(email ?? "");
 
         if (userData == null)
         {
@@ -84,54 +74,27 @@ public class MessageService : AppService, IMessageService
 
         if (message.Message.Contains('/'))
         {
-            MessageModel messageModel = new MessageModel { Id = message.Id, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email };;
-            var commandAllowed = false;
+            var resultProcessCommand = await ProcessCommandMessage(message, room.Name, userData.Email);
 
-            foreach (var allowedCommand in _signalRConfigurations.AllowedCommands)
-            {
-                var regex = new Regex($"(?<={allowedCommand}).*").Matches(message.Message);
+            if (resultProcessCommand.result)
+                return await Task.FromResult(new AppServiceResponse<MessageViewModel>(new MessageViewModel { Id = message.Id, Message = message.Message, Timestamp = message.Timestamp, Room = room.Name, User = userData.Email }, "Command Sent Successfully", true));
 
-                if (regex.Any())
-                    commandAllowed = true;
-            }
-
-            if (commandAllowed)
-            {
-                messageModel.Message = "Wait! Command being processed";
-                
-                await _hubContext.SendInfoMessage(messageModel);
-
-                var splitCommand = message.Message.Split("=");
-
-                var result = _communicationRestService.SendRequest(_signalRConfigurations.UrlStockBot, "Command", Method.Post, new CommandViewModel
-                {
-                    Command = splitCommand[1]
-                });
-                
-                if (result.IsSuccessful)
-                {
-                    return await Task.FromResult(new AppServiceResponse<MessageViewModel>(new MessageViewModel { Id = message.Id, Message = message.Message, Timestamp = message.Timestamp, Room = room.Name, User = userData.Email }, "Command Sent Successfully", true));
-                }
-
-                messageModel.Message = "Error to process Command";
-
-                await _hubContext.SendInfoMessage(messageModel);
-                    
+            if (resultProcessCommand.type == ETypeErrorProcessCommandMessage.ErrorProcess)
                 return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error to process Command", false));
-            }
-            
-            messageModel.Message = "Command Invalid";
-
-            await _hubContext.SendInfoMessage(messageModel);
 
             return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error Sending Command", false));
         }
 
         if (message.IsValid())
         {
-            await _roomMessageRepository.AddAsync(message);
+            if (userData.Email == _signalRConfigurations.StockUser)
+            {
+                await _hubContext.SendMessage(new MessageModel { Id = message.Id, Message = message.Message, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email });
 
-            await _hubContext.SendMessage(new MessageModel { Id = message.Id, Message = message.Message, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email });
+                return await Task.FromResult(new AppServiceResponse<MessageViewModel>(new MessageViewModel { Id = message.Id, Message = message.Message, Timestamp = message.Timestamp, Room = room.Name, User = userData.Email }, "Message Created Successfully", true));
+            }
+
+            await _roomMessageRepository.AddAsync(message);
         }
         else
         {
@@ -141,7 +104,12 @@ public class MessageService : AppService, IMessageService
         }
 
         if (await CommitAsync())
+        {
+            await _hubContext.SendMessage(new MessageModel { Id = message.Id, Message = message.Message, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email });
+
             return await Task.FromResult(new AppServiceResponse<MessageViewModel>(new MessageViewModel { Id = message.Id, Message = message.Message, Timestamp = message.Timestamp, Room = room.Name, User = userData.Email }, "Message Created Successfully", true));
+        }
+
 
         return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error Creating Message", false));
     }
@@ -200,5 +168,48 @@ public class MessageService : AppService, IMessageService
         return await Task.FromResult(new AppServiceResponse<List<MessageViewModel>>(messagesViewModel, "Messages obtained successfully", true));
     }
 
-    #endregion Public Methods
+    private async Task<(bool result, ETypeErrorProcessCommandMessage type)> ProcessCommandMessage(RoomMessage message, string roomName, string userEmail)
+    {
+        var messageModel = new MessageModel { Id = message.Id, Room = roomName, Timestamp = message.Timestamp, User = userEmail };
+
+        var commandAllowed = false;
+
+        foreach (var allowedCommand in _signalRConfigurations.AllowedCommands)
+        {
+            var regex = new Regex($"(?<={allowedCommand}).*").Matches(message.Message);
+
+            if (regex.Any())
+                commandAllowed = true;
+        }
+
+        if (commandAllowed)
+        {
+            messageModel.Message = "Wait! Command in processing";
+
+            await _hubContext.SendInfoMessage(messageModel);
+
+            var splitCommand = message.Message.Split("=");
+
+            var result = _communicationRestService.SendRequest(_signalRConfigurations.UrlStockBot, "Command", Method.Post, new CommandViewModel
+            {
+                Room = roomName,
+                Command = splitCommand[1]
+            });
+
+            if (result.IsSuccessful)
+                return (true, ETypeErrorProcessCommandMessage.Success);
+
+            messageModel.Message = "Error to process Command";
+
+            await _hubContext.SendInfoMessage(messageModel);
+
+            return (false, ETypeErrorProcessCommandMessage.ErrorProcess);
+        }
+
+        messageModel.Message = "Command Invalid";
+
+        await _hubContext.SendInfoMessage(messageModel);
+
+        return (true, ETypeErrorProcessCommandMessage.CommandInvalid);
+    }
 }

@@ -3,7 +3,6 @@ using AmazingChat.Application.Interfaces;
 using AmazingChat.Application.Models;
 using AmazingChat.Domain.Entities;
 using AmazingChat.Domain.Interfaces.Repositories;
-using AmazingChat.Domain.Shared;
 using AmazingChat.Domain.Shared.Notifications;
 using AmazingChat.Domain.Shared.UnitOfWork;
 
@@ -11,14 +10,8 @@ namespace AmazingChat.Application.Services;
 
 public class UserService : AppService, IUserService
 {
-    #region Fields
-
     private readonly IUserRepository _userRepository;
-
-    #endregion
-
-    #region Constructors
-
+    
     public UserService(IUnitOfWork unitOfWork,
         INotifier notifier,
         IUserRepository userRepository)
@@ -26,10 +19,6 @@ public class UserService : AppService, IUserService
     {
         _userRepository = userRepository;
     }
-
-    #endregion Constructors
-
-    #region Public Methods
 
     public async Task<IAppServiceResponse> Create(UserViewModel request)
     {
@@ -60,6 +49,4 @@ public class UserService : AppService, IUserService
 
         return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error Creating User", false));
     }
-
-    #endregion Public Methods
 }

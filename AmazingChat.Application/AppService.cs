@@ -1,4 +1,3 @@
-using AmazingChat.Domain.Shared;
 using AmazingChat.Domain.Shared.Notifications;
 using AmazingChat.Domain.Shared.UnitOfWork;
 using FluentValidation.Results;
@@ -7,15 +6,10 @@ namespace AmazingChat.Application;
 
 public abstract class AppService
 {
-    #region Fields
-
     private readonly INotifier _notifier;
 
     private readonly IUnitOfWork _unitOfWork;
 
-    #endregion Fields
-
-    #region Constructors
 
     public AppService(IUnitOfWork unitOfWork, INotifier notifier)
     {
@@ -23,9 +17,6 @@ public abstract class AppService
         _notifier = notifier;
     }
 
-    #endregion Constructors
-
-    #region Methods
 
     public async Task<bool> CommitAsync()
     {
@@ -59,6 +50,4 @@ public abstract class AppService
     {
         return _notifier.GetAllNotifications();
     }
-
-    #endregion Methods
 }

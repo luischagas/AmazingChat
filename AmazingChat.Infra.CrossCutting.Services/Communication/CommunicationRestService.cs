@@ -1,4 +1,3 @@
-using AmazingChat.Domain.Interfaces.Services;
 using AmazingChat.Domain.Shared.Services;
 using RestSharp;
 

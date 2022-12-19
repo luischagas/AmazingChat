@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace AmazingChat.Application.Models;
 
 public class RoomViewModel

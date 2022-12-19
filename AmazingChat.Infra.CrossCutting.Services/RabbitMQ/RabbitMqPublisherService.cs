@@ -1,76 +1,61 @@
 using System.Text;
-using AmazingChat.Domain.Interfaces.Services;
 using AmazingChat.Domain.Shared.Models;
-using Microsoft.Extensions.DependencyInjection;
+using AmazingChat.Domain.Shared.Services;
 using RabbitMQ.Client;
 
 namespace AmazingChat.Infra.CrossCutting.Services.RabbitMQ;
 
- public class RabbitMqPublisherService : IRabbitMqPublisherService
+public class RabbitMqPublisherService : IRabbitMqPublisherService
+{
+    private readonly RabbitMqSettings _settings;
+    private readonly IModel _channel;
+
+    public RabbitMqPublisherService(RabbitMqSettings settings)
     {
-        #region Fields
+        _settings = settings;
 
-        private readonly RabbitMqSettings _settings;
-        private readonly ConnectionFactory _factory;
-        private readonly IConnection _connection;
-        private readonly IModel _channel;
-
-        #endregion Fields
-
-        #region Constructors
-
-        public RabbitMqPublisherService(RabbitMqSettings settings, IServiceScopeFactory serviceScopeFactory)
+        var factory = new ConnectionFactory
         {
-            _settings = settings;
+            HostName = settings.HostName,
+            Port = settings.Port,
+            UserName = settings.UserName,
+            Password = settings.Password
+        };
 
-            _factory = new ConnectionFactory()
-            {
-                HostName = settings.HostName,
-                Port = settings.Port,
-                UserName = settings.UserName,
-                Password = settings.Password,
-            };
-
-            try
-            {
-                _connection = _factory.CreateConnection();
-                _channel = _connection.CreateModel();
-
-                RabbitMqInitializer.Initiate(_channel, settings);
-            }
-            catch (Exception ex)
-            {
-            }
-
-        }
-
-        #endregion ConstructorsInnerException = {OperationInterruptedException} RabbitMQ.Client.Exceptions.OperationInterruptedException: The AMQP operation was interrupted: AMQP close-reason, initiated by Peer, code=530, text='NOT_ALLOWED - vhost Jobsity not found', classId=10, methodId=40\n   at RabbitMQ.Client.Impl.SimpleBlockingRp… View
-
-        #region Methods
-
-        public bool EnqueueMessage(string message)
+        try
         {
-            var bodyMessage = Encoding.UTF8.GetBytes(message);
+            var connection = factory.CreateConnection();
+            _channel = connection.CreateModel();
 
-            try
-            {
-                IBasicProperties props = _channel.CreateBasicProperties();
-                props.Persistent = true;
-
-                _channel.BasicPublish(
-                    exchange: _settings.Queue.Exchange.Name,
-                    routingKey: _settings.Queue.RoutingKey,
-                    basicProperties: props,
-                    body: bodyMessage
-                );
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-
-            return true;
+            RabbitMqInitializer.Initiate(_channel, settings);
         }
-
-        #endregion Methods
+        catch (Exception ex)
+        {
+        }
     }
+
+
+    public bool EnqueueMessage(string message)
+    {
+        var bodyMessage = Encoding.UTF8.GetBytes(message);
+
+        try
+        {
+            var props = _channel.CreateBasicProperties();
+            props.Persistent = true;
+
+            _channel.BasicPublish(
+                _settings.Queue.Exchange.Name,
+                _settings.Queue.RoutingKey,
+                props,
+                bodyMessage
+            );
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+
+        return true;
+    }
+}

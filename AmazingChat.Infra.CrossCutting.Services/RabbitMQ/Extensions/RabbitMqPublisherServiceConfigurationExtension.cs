@@ -1,5 +1,5 @@
-﻿using AmazingChat.Domain.Interfaces.Services;
-using AmazingChat.Domain.Shared.Models;
+﻿using AmazingChat.Domain.Shared.Models;
+using AmazingChat.Domain.Shared.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,8 +7,6 @@ namespace AmazingChat.Infra.CrossCutting.Services.RabbitMQ.Extensions
 {
     public static class RabbitMqPublisherServiceConfigurationExtension
     {
-        #region Methods
-
         public static IServiceCollection AddRabbitMqPublisherService(this IServiceCollection services, IConfiguration configuration)
         {
             var rabbitMqSettings = new RabbitMqSettings();
@@ -21,7 +19,5 @@ namespace AmazingChat.Infra.CrossCutting.Services.RabbitMQ.Extensions
 
             return services;
         }
-
-        #endregion Methods
     }
 }

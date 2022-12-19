@@ -161,7 +161,7 @@ public class ChatHub : Hub
         try
         {
             await _context.Clients.All.SendAsync("removeChatRoom", roomId);
-            await _context.Clients.Group(roomName).SendAsync("onRoomDeleted", string.Format("Room {0} has been deleted.\nYou are moved to the first available room!", roomName));
+            await _context.Clients.Group(roomName).SendAsync("onRoomDeleted", string.Format("Room {0} has been deleted!", roomName));
         }
         catch (Exception ex)
         {

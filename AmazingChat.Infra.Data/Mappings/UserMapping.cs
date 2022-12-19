@@ -6,8 +6,6 @@ namespace AmazingChat.Infra.Data.Mappings;
 
 public class UserMapping : IEntityTypeConfiguration<User>
 {
-    #region Methods
-
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder
@@ -39,6 +37,4 @@ public class UserMapping : IEntityTypeConfiguration<User>
             .Ignore(d => d.ValidationResult);
 
     }
-
-    #endregion Methods
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AmazingChat.Infra.CrossCutting.Identity;
 
-public class GlobalExceptionHandlerFilter: IExceptionFilter
+public class GlobalExceptionHandlerFilter : IExceptionFilter
 {
     #region Private Fields
 
@@ -16,8 +16,7 @@ public class GlobalExceptionHandlerFilter: IExceptionFilter
 
     #region Public Constructors
 
-    public GlobalExceptionHandlerFilter(
-        INotifier notifier)
+    public GlobalExceptionHandlerFilter(INotifier notifier)
     {
         _notifier = notifier;
     }
@@ -34,7 +33,7 @@ public class GlobalExceptionHandlerFilter: IExceptionFilter
 
         context.Result = new ObjectResult(errorResponse)
         {
-            StatusCode = (int)HttpStatusCode.InternalServerError
+            StatusCode = (int) HttpStatusCode.InternalServerError
         };
     }
 

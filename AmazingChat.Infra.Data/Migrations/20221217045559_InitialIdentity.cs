@@ -47,7 +47,7 @@ namespace AmazingChat.Infra.Data.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
-
+            
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new

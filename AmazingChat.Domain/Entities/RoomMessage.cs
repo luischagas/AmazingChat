@@ -11,48 +11,48 @@ public class RoomMessage : Entity<RoomMessage>
         UserId = userId;
         Timestamp = DateTime.Now;
     }
-    
+
     protected RoomMessage()
     {
     }
-    
-    public string Message { get; }
-    
-    public DateTime Timestamp { get; private set; }
 
-    public Guid RoomId { get; private set; }
-    
+    public string Message { get; }
+
+    public DateTime Timestamp { get; }
+
+    public Guid RoomId { get; }
+
     public Room Room { get; private set; }
-    
-    public Guid UserId { get; private set; }
-    
+
+    public Guid UserId { get; }
+
     public User User { get; private set; }
-    
+
     public override bool IsValid()
     {
         ValidateMessage();
         ValidateUserId();
         ValidateRoomId();
-        
+
         AddErrors(Validate(this));
 
         return ValidationResult.IsValid;
     }
-    
+
     private void ValidateMessage()
     {
         RuleFor(d => d.Message)
             .NotEmpty()
             .WithMessage("Message is required");
     }
-    
+
     private void ValidateUserId()
     {
         RuleFor(d => d.UserId)
             .NotEmpty()
             .WithMessage("User is required");
     }
-    
+
     private void ValidateRoomId()
     {
         RuleFor(d => d.RoomId)

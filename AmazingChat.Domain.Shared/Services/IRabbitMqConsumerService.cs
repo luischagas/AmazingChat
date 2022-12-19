@@ -5,13 +5,9 @@ namespace AmazingChat.Domain.Shared.Services;
 
 public interface IRabbitMqConsumerService
 {
-    #region Methods
-    
     EventingBasicConsumer DefineBasicConsumer();
-    
-    IModel GetChannel();
-    
-    void SetConsumer(EventingBasicConsumer consumer);
 
-    #endregion Methods
+    IModel GetChannel();
+
+    void SetConsumer(EventingBasicConsumer consumer);
 }

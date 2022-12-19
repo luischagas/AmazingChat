@@ -6,37 +6,17 @@ using Microsoft.EntityFrameworkCore;
 namespace AmazingChat.Infra.Data.Repositories;
 
 public class UserRepository : BaseRepository<User>, IUserRepository
+{
+    private readonly DbSet<User> _users;
+    
+    public UserRepository(AmazingChatContext db) : base(db)
     {
-        #region Private Fields
-
-        private readonly DbSet<User> _users;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public UserRepository(AmazingChatContext db) : base(db)
-        {
-            _users = db.Set<User>();
-        }
-
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public async Task<User> GetByConnectionId(string connectionId)
-        {
-            return await _users
-                .FirstOrDefaultAsync(a => a.ConnectionId == connectionId);
-
-        }
-        
-        public async Task<User> GetByEmail(string email)
-        {
-            return await _users
-                .FirstOrDefaultAsync(a => a.Email == email);
-
-        }
-
-        #endregion Public Methods
+        _users = db.Set<User>();
     }
+    
+    public async Task<User> GetByEmail(string email)
+    {
+        return await _users
+            .FirstOrDefaultAsync(a => a.Email == email);
+    }
+}
