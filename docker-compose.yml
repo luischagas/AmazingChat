@@ -11,6 +11,8 @@ services:
       context: ./nginx
     ports:
       - "80:80"
+    networks:
+     - amazing-dev
 
   db:
     image: mcr.microsoft.com/azure-sql-edge
@@ -22,24 +24,25 @@ services:
     ports:
       - "1433:1433"
     restart: always
+    networks:
+     - amazing-dev
 
   rabbitmq:
-        image: rabbitmq:3-management-alpine
-        environment:
-            RABBITMQ_DEFAULT_USER: "rabbitmq"
-            RABBITMQ_DEFAULT_PASS: "PASSWORD"
-        ports:
-            - "5672:5672"
-            - "15672:15672"
-        healthcheck:
-            test: [ "CMD", "nc", "-z", "localhost", "5672" ]
-            interval: 10s
-            timeout: 10s
-            retries: 5
-        volumes:
-            - ./cert_rabbitmq:/cert_rabbitmq
-        networks:
-            - amazing-dev
+    image: rabbitmq:management
+    hostname: "messageBroker"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 15s
+      retries: 3
+    networks:
+      - amazing-dev
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "PASSWORD" 
 
   stock:
     depends_on:
@@ -55,8 +58,8 @@ services:
 
   amazingchat:
     depends_on:
-     rabbitmq:
-        condition: service_healthy
+     - rabbitmq
+     - stock
     environment:
       - ConnectionStrings__DefaultConnection=Data Source=db,1433;Initial Catalog=AmazingChatDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
       - ConnectionStrings__IdentityConnection=Data Source=db,1433;Initial Catalog=AmazingChatIdentityDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
@@ -74,4 +77,3 @@ volumes:
 
 networks:
     amazing-dev:
-        driver: bridge
