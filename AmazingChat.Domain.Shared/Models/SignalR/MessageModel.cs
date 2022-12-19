@@ -1,4 +1,4 @@
-namespace AmazingChat.Infra.CrossCutting.Services.SignalR.Models;
+namespace AmazingChat.Domain.Shared.Models.SignalR;
 
 public class MessageModel
 {

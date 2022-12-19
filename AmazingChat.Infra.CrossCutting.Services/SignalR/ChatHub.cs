@@ -1,6 +1,7 @@
 using AmazingChat.Domain.Interfaces.Repositories;
+using AmazingChat.Domain.Shared.Models.SignalR;
+using AmazingChat.Domain.Shared.Services;
 using AmazingChat.Domain.Shared.UnitOfWork;
-using AmazingChat.Infra.CrossCutting.Services.SignalR.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace AmazingChat.Infra.CrossCutting.Services.SignalR;
 
 [Authorize]
-public class ChatHub : Hub
+public class ChatHub : Hub, IChatHub
 {
     private readonly IServiceProvider _serviceProvider;
 

@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.UI", "AmazingCh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Domain.Shared", "AmazingChat.Domain.Shared\AmazingChat.Domain.Shared.csproj", "{E1FFEB09-C113-469A-910B-C0C0D7C71C5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Tests", "AmazingChat.Tests\AmazingChat.Tests.csproj", "{4A94E75D-B265-4036-B9F9-7B7C9983E956}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,7 @@ Global
 		{A8EB7326-5FB6-453B-9047-CFBBD16C4FFC} = {70402C37-C09B-4C76-B808-DA8107926D4A}
 		{355A5A2B-14BB-4414-8C7F-5CD57A6D3129} = {1680B681-5A63-4558-8467-9E0608CE428D}
 		{E1FFEB09-C113-469A-910B-C0C0D7C71C5A} = {06A8430B-9727-4822-9891-19D37E172528}
+		{4A94E75D-B265-4036-B9F9-7B7C9983E956} = {AC751FC9-43E4-4EAF-A5E5-C3EC29738E7F}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E01D090E-796F-45E2-B786-1312C4727E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -89,5 +92,9 @@ Global
 		{E1FFEB09-C113-469A-910B-C0C0D7C71C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1FFEB09-C113-469A-910B-C0C0D7C71C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1FFEB09-C113-469A-910B-C0C0D7C71C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A94E75D-B265-4036-B9F9-7B7C9983E956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A94E75D-B265-4036-B9F9-7B7C9983E956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A94E75D-B265-4036-B9F9-7B7C9983E956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A94E75D-B265-4036-B9F9-7B7C9983E956}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -4,6 +4,7 @@ using AmazingChat.Application.Models;
 using AmazingChat.Domain.Entities;
 using AmazingChat.Domain.Interfaces.Repositories;
 using AmazingChat.Domain.Shared.Notifications;
+using AmazingChat.Domain.Shared.Services;
 using AmazingChat.Domain.Shared.UnitOfWork;
 using AmazingChat.Infra.CrossCutting.Services.SignalR;
 
@@ -12,16 +13,16 @@ namespace AmazingChat.Application.Services;
 public class RoomService : AppService, IRoomService
 {
     private readonly IRoomRepository _roomRepository;
-    private readonly ChatHub _hubContext;
+    private readonly IChatHub _hub;
 
     public RoomService(IUnitOfWork unitOfWork,
         INotifier notifier,
         IRoomRepository roomRepository,
-        ChatHub hubContext)
+        IChatHub hub)
         : base(unitOfWork, notifier)
     {
         _roomRepository = roomRepository;
-        _hubContext = hubContext;
+        _hub = hub;
     }
 
 
@@ -51,7 +52,7 @@ public class RoomService : AppService, IRoomService
 
         if (await CommitAsync())
         {
-            await _hubContext.CreateRoom(room.Id, room.Name);
+            await _hub.CreateRoom(room.Id, room.Name);
 
             return await Task.FromResult(new AppServiceResponse<RoomViewModel>(new RoomViewModel { Id = room.Id, Name = room.Name }, "Room Created Successfully", true));
         }
@@ -115,19 +116,21 @@ public class RoomService : AppService, IRoomService
         if (room.IsValid())
         {
             _roomRepository.Delete(room);
-
-            await _hubContext.RemoveRoom(room.Id, room.Name);
         }
         else
         {
             Notify(room.ValidationResult);
 
-            return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error to Create Room", false));
+            return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error to Remove Room", false));
         }
 
         if (await CommitAsync())
-            return await Task.FromResult(new AppServiceResponse<RoomViewModel>(new RoomViewModel { Id = room.Id, Name = room.Name }, "Room Created Successfully", true));
+        {
+            await _hub.RemoveRoom(room.Id, room.Name);
+            
+            return await Task.FromResult(new AppServiceResponse<RoomViewModel>(new RoomViewModel { Id = room.Id, Name = room.Name }, "Room Removed Successfully", true));
+        }
 
-        return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error Creating Order", false));
+        return await Task.FromResult(new AppServiceResponse<ICollection<Notification>>(GetAllNotifications(), "Error to Remove Room", false));
     }
 }

@@ -35,7 +35,7 @@ public static class NativeInjector
         services.AddScoped<ICommunicationRestService, CommunicationRestService>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-        services.AddScoped<ChatHub>();
+        services.AddScoped<IChatHub, ChatHub>();
 
         services.AddScoped<GlobalExceptionHandlerFilter>();
 

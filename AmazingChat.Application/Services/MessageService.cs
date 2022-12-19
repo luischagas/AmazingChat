@@ -6,11 +6,11 @@ using AmazingChat.Domain.Entities;
 using AmazingChat.Domain.Enums;
 using AmazingChat.Domain.Interfaces.Repositories;
 using AmazingChat.Domain.Shared.Models;
+using AmazingChat.Domain.Shared.Models.SignalR;
 using AmazingChat.Domain.Shared.Notifications;
 using AmazingChat.Domain.Shared.Services;
 using AmazingChat.Domain.Shared.UnitOfWork;
 using AmazingChat.Infra.CrossCutting.Services.SignalR;
-using AmazingChat.Infra.CrossCutting.Services.SignalR.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using RestSharp;
@@ -25,12 +25,12 @@ public class MessageService : AppService, IMessageService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly SignalRConfigurations _signalRConfigurations;
     private readonly ICommunicationRestService _communicationRestService;
-    private readonly ChatHub _hubContext;
+    private readonly IChatHub _hub;
     
     public MessageService(IUnitOfWork unitOfWork,
         INotifier notifier,
         IRoomRepository roomRepository,
-        ChatHub hubContext,
+        IChatHub hub,
         IRoomMessageRepository roomMessageRepository,
         IUserRepository userRepository,
         IHttpContextAccessor httpContextAccessor,
@@ -39,7 +39,7 @@ public class MessageService : AppService, IMessageService
         : base(unitOfWork, notifier)
     {
         _roomRepository = roomRepository;
-        _hubContext = hubContext;
+        _hub = hub;
         _roomMessageRepository = roomMessageRepository;
         _userRepository = userRepository;
         _httpContextAccessor = httpContextAccessor;
@@ -89,7 +89,7 @@ public class MessageService : AppService, IMessageService
         {
             if (userData.Email == _signalRConfigurations.StockUser)
             {
-                await _hubContext.SendMessage(new MessageModel { Id = message.Id, Message = message.Message, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email });
+                await _hub.SendMessage(new MessageModel { Id = message.Id, Message = message.Message, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email });
 
                 return await Task.FromResult(new AppServiceResponse<MessageViewModel>(new MessageViewModel { Id = message.Id, Message = message.Message, Timestamp = message.Timestamp, Room = room.Name, User = userData.Email }, "Message Created Successfully", true));
             }
@@ -105,7 +105,7 @@ public class MessageService : AppService, IMessageService
 
         if (await CommitAsync())
         {
-            await _hubContext.SendMessage(new MessageModel { Id = message.Id, Message = message.Message, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email });
+            await _hub.SendMessage(new MessageModel { Id = message.Id, Message = message.Message, Room = room.Name, Timestamp = message.Timestamp, User = userData.Email });
 
             return await Task.FromResult(new AppServiceResponse<MessageViewModel>(new MessageViewModel { Id = message.Id, Message = message.Message, Timestamp = message.Timestamp, Room = room.Name, User = userData.Email }, "Message Created Successfully", true));
         }
@@ -186,7 +186,7 @@ public class MessageService : AppService, IMessageService
         {
             messageModel.Message = "Wait! Command in processing";
 
-            await _hubContext.SendInfoMessage(messageModel);
+            await _hub.SendInfoMessage(messageModel);
 
             var splitCommand = message.Message.Split("=");
 
@@ -201,14 +201,14 @@ public class MessageService : AppService, IMessageService
 
             messageModel.Message = "Error to process Command";
 
-            await _hubContext.SendInfoMessage(messageModel);
+            await _hub.SendInfoMessage(messageModel);
 
             return (false, ETypeErrorProcessCommandMessage.ErrorProcess);
         }
 
         messageModel.Message = "Command Invalid";
 
-        await _hubContext.SendInfoMessage(messageModel);
+        await _hub.SendInfoMessage(messageModel);
 
         return (true, ETypeErrorProcessCommandMessage.CommandInvalid);
     }

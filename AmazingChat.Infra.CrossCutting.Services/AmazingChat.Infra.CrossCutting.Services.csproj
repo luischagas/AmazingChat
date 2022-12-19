@@ -16,4 +16,8 @@
       <ProjectReference Include="..\AmazingChat.Infra.Data\AmazingChat.Infra.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="SignalR\Models" />
+    </ItemGroup>
+
 </Project>
