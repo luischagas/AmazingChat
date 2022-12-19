@@ -15,13 +15,6 @@ To execute the project, the following step is necessary:
 
 - Then a web browser will open with the address: http://localhost:8080 ready to use Amazing Chat. 
 
-- The tests will be run automatically by the same script that will create the containers, but it is also possible to run them with the command:
-  - (It's necessary navigate the folder until you reach the project folder)
-
-```bash
-dotnet test AmazingChat.Tests
-``` 
-
 ## Installation (2nd option)
 
 - Make sure the Docker is running and ready on your machine 
