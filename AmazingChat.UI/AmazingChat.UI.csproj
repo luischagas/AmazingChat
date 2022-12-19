@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+        <None Include="wwwroot\imgs\amazing-logo.png" />
     </ItemGroup>
 
     <ItemGroup>
