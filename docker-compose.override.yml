@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
       context: ./nginx
     ports:
-      - "80:80"
+      - "8080:80"
     networks:
      - amazing-dev
 
@@ -19,8 +19,6 @@ services:
     environment:
       ACCEPT_EULA: 'Y'
       SA_PASSWORD: MyPass@word
-    volumes:
-      - ./dbdata:/var/opt/mssql/data
     ports:
       - "1433:1433"
     restart: always
@@ -46,7 +44,8 @@ services:
 
   stock:
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     environment:
       - RabbitMQSettings__ConnectionString=amqp://rabbitmq:PASSWORD@rabbitmq:5672
       - ConnectionStrings__DefaultConnection=Data Source=db,1433;Initial Catalog=AmazingChatDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
@@ -58,8 +57,8 @@ services:
 
   amazingchat:
     depends_on:
-     - rabbitmq
-     - stock
+     rabbitmq:
+        condition: service_healthy
     environment:
       - ConnectionStrings__DefaultConnection=Data Source=db,1433;Initial Catalog=AmazingChatDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
       - ConnectionStrings__IdentityConnection=Data Source=db,1433;Initial Catalog=AmazingChatIdentityDb;User Id=sa;Password=MyPass@word;Trusted_Connection=False;MultipleActiveResultSets=true
@@ -70,10 +69,6 @@ services:
     restart: always   
     networks:
             - amazing-dev
-
-volumes:
-  dbdata:  
-  rabbit:
 
 networks:
     amazing-dev:
