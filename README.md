@@ -35,7 +35,7 @@ docker run -e "ACCEPT_EULA=1" -e "MSSQL_SA_PASSWORD=MyPass@word" -e "MSSQL_PID=D
 docker run -d -p 15672:15672 -p 5672:5672 -p 5671:5671 --hostname my-rabbitmq --name my-rabbitmq-container -e RABBITMQ_DEFAULT_USER=rabbitmq -e RABBITMQ_DEFAULT_PASS=PASSWORD rabbitmq:3-management-alpine
 ``` 
 
-- Run the followings commands to create both databases, main database and identity database:
+- Run the followings commands to create both databases by entity framework migrations:
 
 ```bash
 update-database -context AmazingChatIdentityContext
