@@ -27,6 +27,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\AmazingChat.Application\AmazingChat.Application.csproj" />
+      <ProjectReference Include="..\AmazingChat.Domain.Shared\AmazingChat.Domain.Shared.csproj" />
       <ProjectReference Include="..\AmazingChat.Infra.CrossCutting.Configurations\AmazingChat.Infra.CrossCutting.Configurations.csproj" />
       <ProjectReference Include="..\AmazingChat.Infra.CrossCutting.IoC\AmazingChat.Infra.CrossCutting.IoC.csproj" />
       <ProjectReference Include="..\AmazingChat.Infra.CrossCutting.Services\AmazingChat.Infra.CrossCutting.Services.csproj" />
