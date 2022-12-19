@@ -4,6 +4,8 @@ docker-compose build
 
 docker-compose up -d
 
-URL=$(docker inspect --format='http://localhost:{{(index (index .NetworkSettings.Ports "80/tcp") 0).HostPort}}' amazing-chat)
+sleep 5
+
+URL='http://localhost:8080'
 
 start $URL
