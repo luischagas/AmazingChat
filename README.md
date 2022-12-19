@@ -22,6 +22,22 @@ To execute the project, the following step is necessary:
 dotnet test AmazingChat.Tests
 ``` 
 
+## Installation (2nd option)
+
+- Make sure the Docker is running and ready on your machine 
+
+- Run the following docker commands, it will create the required containers
+
+```bash
+docker-compose build
+``` 
+
+```bash
+docker-compose up -d
+``` 
+
+- Open a web browser with the address: http://localhost:8080
+
 ## Debug Installation
 
 - Make sure the Docker is running and ready on your machine 
