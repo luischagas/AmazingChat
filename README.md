@@ -59,7 +59,7 @@ update-database -context AmazingChatContext
 - Docker Support
 - RabbitMQ
 
-## What were functionalities implemented? 
+## What features were implemented? 
 
 - Chatroom 
 - Multiples room can be created
