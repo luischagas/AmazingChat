@@ -58,6 +58,7 @@ update-database -context AmazingChatContext
 - Unit Tests using Xunit and Fixture libraries
 - Docker Support
 - RabbitMQ
+- SignalR
 
 ## What features were implemented? 
 
