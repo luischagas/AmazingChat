@@ -13,7 +13,7 @@ To execute the project, the following step is necessary:
   - UI (MVC Application)
   - Stock Bot (Web API Application)
 
-- After that it will open a web-browser with address: http://localhost:8080 ready to use Amazing Chat. 
+- Then a web browser will open with the address: http://localhost:8080 ready to use Amazing Chat. 
 
 - The tests will be run automatically by the same script that will create the containers, but it is also possible to run them with the command:
   - (It's necessary navigate the folder until you reach the project folder)
