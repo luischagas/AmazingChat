@@ -7,6 +7,9 @@ using AmazingChat.Infra.CrossCutting.Services.RabbitMQ.Extensions;
 using AmazingChat.Infra.CrossCutting.Services.SignalR;
 using AmazingChat.Infra.Data.Context;
 using AmazingChat.UI.HostedService;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace AmazingChat.UI;
@@ -50,6 +53,13 @@ public class Startup
         services.ResolveDependencies();
 
         services.Configure<SignalRConfigurations>(Configuration.GetSection("SignalR"));
+        
+        services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(@"C:\temp-keys\"))
+            .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
+            {
+                EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+                ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+            });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
