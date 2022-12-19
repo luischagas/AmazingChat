@@ -1,0 +1,62 @@
+version: '3.4'
+
+services:
+  db:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: amazing-db
+    hostname: amazingdb
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: MyPass@word
+    ports:
+      - "1433:1433"
+    restart: always
+    networks:
+         - amazing-dev
+
+  rabbitmq:
+    image: rabbitmq:3.9-management-alpine
+    container_name: rabbit-mq
+    environment:
+          RABBITMQ_DEFAULT_USER: "rabbitmq"
+          RABBITMQ_DEFAULT_PASS: "PASSWORD"
+    ports:
+       - "5672:5672"
+       - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+    volumes:
+         - ./cert_rabbitmq:/cert_rabbitmq
+    networks:
+         - amazing-dev   
+
+  amazingchat.ui:
+    image: ${DOCKER_REGISTRY-}amazingchatui
+    container_name: amazing-ui
+    depends_on:
+      - stock-bot
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=localhost;User=sa;Password=MyPass@word;Database=AmazingChatDb;Trusted_Connection=False;MultipleActiveResultSets=true;
+      - UrlStockBot=http://localhost/
+    build:
+      context: .
+      dockerfile: AmazingChat.UI/Dockerfile
+    restart: always
+    networks:
+         - amazing-dev
+
+  stock-bot:
+    depends_on:
+      - rabbitmq
+    build:
+      dockerfile: AmazingChat.StockBot/Dockerfile
+    restart: always
+    networks:
+         - amazing-dev
+
+networks:
+    amazing-dev:
+        driver: bridge

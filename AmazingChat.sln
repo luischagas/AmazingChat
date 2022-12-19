@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Presentation", "0 - Presentation", "{1680B681-5A63-4558-8467-9E0608CE428D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Services", "1 - Services", "{2B94A76F-DC43-4DF0-A736-A5F973C8D417}"
@@ -12,48 +15,36 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infrastructure", "4 - I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Tests", "5 - Tests", "{AC751FC9-43E4-4EAF-A5E5-C3EC29738E7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Application", "AmazingChat.Application\AmazingChat.Application.csproj", "{E01D090E-796F-45E2-B786-1312C4727E22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.Application", "AmazingChat.Application\AmazingChat.Application.csproj", "{E01D090E-796F-45E2-B786-1312C4727E22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Domain", "AmazingChat.Domain\AmazingChat.Domain.csproj", "{CEC1CECE-FC33-4F20-B0E3-270A2AE26DAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.Domain", "AmazingChat.Domain\AmazingChat.Domain.csproj", "{CEC1CECE-FC33-4F20-B0E3-270A2AE26DAC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 - Data", "4.1 - Data", "{E4570F7E-07B7-44E3-9EC0-B7CE76E68B67}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.2 - CrossCutting", "4.2 - CrossCutting", "{70402C37-C09B-4C76-B808-DA8107926D4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Infra.CrossCutting.IoC", "AmazingChat.Infra.CrossCutting.IoC\AmazingChat.Infra.CrossCutting.IoC.csproj", "{9FFFAAD3-A566-41AA-B6E8-E452B84789AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.Infra.CrossCutting.IoC", "AmazingChat.Infra.CrossCutting.IoC\AmazingChat.Infra.CrossCutting.IoC.csproj", "{9FFFAAD3-A566-41AA-B6E8-E452B84789AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Infra.Data", "AmazingChat.Infra.Data\AmazingChat.Infra.Data.csproj", "{16AB90C6-8ADC-453E-B97D-F7029F5A40C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.Infra.Data", "AmazingChat.Infra.Data\AmazingChat.Infra.Data.csproj", "{16AB90C6-8ADC-453E-B97D-F7029F5A40C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.StockBot", "AmazingChat.StockBot\AmazingChat.StockBot.csproj", "{B173F187-DFD4-41A4-9D89-980095F55436}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.StockBot", "AmazingChat.StockBot\AmazingChat.StockBot.csproj", "{B173F187-DFD4-41A4-9D89-980095F55436}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Infra.CrossCutting.Configurations", "AmazingChat.Infra.CrossCutting.Configurations\AmazingChat.Infra.CrossCutting.Configurations.csproj", "{AC96F652-9FAB-4921-868B-6B6426491E7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.Infra.CrossCutting.Configurations", "AmazingChat.Infra.CrossCutting.Configurations\AmazingChat.Infra.CrossCutting.Configurations.csproj", "{AC96F652-9FAB-4921-868B-6B6426491E7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Infra.CrossCutting.Services", "AmazingChat.Infra.CrossCutting.Services\AmazingChat.Infra.CrossCutting.Services.csproj", "{A8EB7326-5FB6-453B-9047-CFBBD16C4FFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.Infra.CrossCutting.Services", "AmazingChat.Infra.CrossCutting.Services\AmazingChat.Infra.CrossCutting.Services.csproj", "{A8EB7326-5FB6-453B-9047-CFBBD16C4FFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.UI", "AmazingChat.UI\AmazingChat.UI.csproj", "{355A5A2B-14BB-4414-8C7F-5CD57A6D3129}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.UI", "AmazingChat.UI\AmazingChat.UI.csproj", "{355A5A2B-14BB-4414-8C7F-5CD57A6D3129}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Domain.Shared", "AmazingChat.Domain.Shared\AmazingChat.Domain.Shared.csproj", "{E1FFEB09-C113-469A-910B-C0C0D7C71C5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.Domain.Shared", "AmazingChat.Domain.Shared\AmazingChat.Domain.Shared.csproj", "{E1FFEB09-C113-469A-910B-C0C0D7C71C5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmazingChat.Tests", "AmazingChat.Tests\AmazingChat.Tests.csproj", "{4A94E75D-B265-4036-B9F9-7B7C9983E956}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazingChat.Tests", "AmazingChat.Tests\AmazingChat.Tests.csproj", "{4A94E75D-B265-4036-B9F9-7B7C9983E956}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{88EEB900-E8BC-4A3D-A78A-1AC1D8161E62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{E01D090E-796F-45E2-B786-1312C4727E22} = {1E313984-438A-4C26-8E13-3951F9F1C660}
-		{CEC1CECE-FC33-4F20-B0E3-270A2AE26DAC} = {06A8430B-9727-4822-9891-19D37E172528}
-		{E4570F7E-07B7-44E3-9EC0-B7CE76E68B67} = {16BA087A-5C14-4C60-A3E0-6594E7BB8630}
-		{70402C37-C09B-4C76-B808-DA8107926D4A} = {16BA087A-5C14-4C60-A3E0-6594E7BB8630}
-		{9FFFAAD3-A566-41AA-B6E8-E452B84789AA} = {70402C37-C09B-4C76-B808-DA8107926D4A}
-		{16AB90C6-8ADC-453E-B97D-F7029F5A40C9} = {E4570F7E-07B7-44E3-9EC0-B7CE76E68B67}
-		{B173F187-DFD4-41A4-9D89-980095F55436} = {2B94A76F-DC43-4DF0-A736-A5F973C8D417}
-		{AC96F652-9FAB-4921-868B-6B6426491E7E} = {70402C37-C09B-4C76-B808-DA8107926D4A}
-		{A8EB7326-5FB6-453B-9047-CFBBD16C4FFC} = {70402C37-C09B-4C76-B808-DA8107926D4A}
-		{355A5A2B-14BB-4414-8C7F-5CD57A6D3129} = {1680B681-5A63-4558-8467-9E0608CE428D}
-		{E1FFEB09-C113-469A-910B-C0C0D7C71C5A} = {06A8430B-9727-4822-9891-19D37E172528}
-		{4A94E75D-B265-4036-B9F9-7B7C9983E956} = {AC751FC9-43E4-4EAF-A5E5-C3EC29738E7F}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E01D090E-796F-45E2-B786-1312C4727E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -96,5 +87,29 @@ Global
 		{4A94E75D-B265-4036-B9F9-7B7C9983E956}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A94E75D-B265-4036-B9F9-7B7C9983E956}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A94E75D-B265-4036-B9F9-7B7C9983E956}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88EEB900-E8BC-4A3D-A78A-1AC1D8161E62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88EEB900-E8BC-4A3D-A78A-1AC1D8161E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88EEB900-E8BC-4A3D-A78A-1AC1D8161E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88EEB900-E8BC-4A3D-A78A-1AC1D8161E62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E01D090E-796F-45E2-B786-1312C4727E22} = {1E313984-438A-4C26-8E13-3951F9F1C660}
+		{CEC1CECE-FC33-4F20-B0E3-270A2AE26DAC} = {06A8430B-9727-4822-9891-19D37E172528}
+		{E4570F7E-07B7-44E3-9EC0-B7CE76E68B67} = {16BA087A-5C14-4C60-A3E0-6594E7BB8630}
+		{70402C37-C09B-4C76-B808-DA8107926D4A} = {16BA087A-5C14-4C60-A3E0-6594E7BB8630}
+		{9FFFAAD3-A566-41AA-B6E8-E452B84789AA} = {70402C37-C09B-4C76-B808-DA8107926D4A}
+		{16AB90C6-8ADC-453E-B97D-F7029F5A40C9} = {E4570F7E-07B7-44E3-9EC0-B7CE76E68B67}
+		{B173F187-DFD4-41A4-9D89-980095F55436} = {2B94A76F-DC43-4DF0-A736-A5F973C8D417}
+		{AC96F652-9FAB-4921-868B-6B6426491E7E} = {70402C37-C09B-4C76-B808-DA8107926D4A}
+		{A8EB7326-5FB6-453B-9047-CFBBD16C4FFC} = {70402C37-C09B-4C76-B808-DA8107926D4A}
+		{355A5A2B-14BB-4414-8C7F-5CD57A6D3129} = {1680B681-5A63-4558-8467-9E0608CE428D}
+		{E1FFEB09-C113-469A-910B-C0C0D7C71C5A} = {06A8430B-9727-4822-9891-19D37E172528}
+		{4A94E75D-B265-4036-B9F9-7B7C9983E956} = {AC751FC9-43E4-4EAF-A5E5-C3EC29738E7F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {600CBEE4-A7AF-41C2-B353-C03369053C0B}
 	EndGlobalSection
 EndGlobal
